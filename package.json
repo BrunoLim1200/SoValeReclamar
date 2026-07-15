@@ -7,7 +7,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:so-vale-reclamar-web": "node dist/so-vale-reclamar-web/server/server.mjs"
+    "serve:ssr:so-vale-reclamar-web": "NG_ALLOWED_HOSTS=localhost node dist/so-vale-reclamar-web/server/server.mjs"
   },
   "prettier": {
     "overrides": [
@@ -29,6 +29,8 @@
     "@angular/platform-server": "^20.1.0",
     "@angular/router": "^20.1.0",
     "@angular/ssr": "^20.1.5",
+    "@ngrx/signals": "^20.0.0",
+    "@tailwindcss/postcss": "^4.3.2",
     "express": "^5.1.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
@@ -40,12 +42,15 @@
     "@types/express": "^5.0.1",
     "@types/jasmine": "~5.1.0",
     "@types/node": "^20.17.19",
+    "autoprefixer": "^10.5.2",
     "jasmine-core": "~5.8.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "postcss": "^8.5.19",
+    "tailwindcss": "^4.3.2",
     "typescript": "~5.8.2"
   }
 }
