@@ -30,8 +30,16 @@ and is the **source of truth** for all data shapes and endpoints.
   (SSR host allowlist: set `NG_ALLOWED_HOSTS` to the deploy domain in prod; the
   serve script sets `localhost` for local. Without it, SSR falls back to CSR.)
 - Lint: not configured yet
-- API base URL: set `apiBaseUrl` in `src/environments/environment.ts`
-  (get it from `npx serverless info --stage dev` in the backend repo).
+- API base URL: `src/environments/environment.dev.ts` (dev) and
+  `environment.prod.ts` (prod) hold `apiBaseUrl`. `environment.ts` is the
+  fallback everything imports from — `angular.json`'s `fileReplacements` swaps
+  it per build configuration (`ng serve`/`development` → `.dev.ts`; `ng build`/
+  `production` → `.prod.ts`). Always import from `./environments/environment`,
+  never `.dev`/`.prod` directly, or the swap has no effect.
+- Cognito config: same three environment files hold `cognito.userPoolId` /
+  `cognito.clientId` — currently `REPLACE-ME`. Fill in from the User Pool
+  console or the backend repo's `serverless info` output; login/register won't
+  work against a real pool until then.
 
 ## Domain model (from `openapi.yaml` — do not invent fields)
 - **Entity** `{ id, type: PLACE|MOVIE|COMPANY|PRODUCT, name, createdBy }` — the
@@ -72,16 +80,17 @@ src/
 ├── environments/           # apiBaseUrl config
 └── app/
     ├── core/
-    │   ├── auth/           # Cognito service, route guards (phase 2)
-    │   ├── http/           # ApiService (typed API client), JWT interceptor
+    │   ├── auth/           # CognitoService (SDK wrapper), AuthStore, authGuard
+    │   ├── http/           # ApiService (typed API client), authInterceptor
     │   └── models/         # domain types mirrored from openapi.yaml
     ├── shared/ui/          # dumb components (e.g. complaint-card)
     ├── layouts/
-    │   ├── main-layout/    # navbar + <router-outlet>
-    │   └── auth-layout/    # login / register / reset (phase 2)
+    │   ├── main-layout/    # navbar (auth state) + <router-outlet>
+    │   └── auth-layout/    # centered card shell for /auth/* pages
     └── features/           # smart, routed components + their signalStores
         ├── feed/           # global ranked feed (infinite scroll)
-        ├── entity/         # entity page + its complaints (later)
+        ├── entity/         # entity page: its complaints, top-corroborated first
+        ├── auth/           # login, register (+ confirm), forgot-password
         ├── create-complaint/ # post + presigned S3 upload (later)
         └── profile/        # user history (later)
 ```

@@ -1,0 +1,62 @@
+<h1 class="mb-4 text-lg font-semibold text-gray-900">Entrar</h1>
+
+@if (notice) {
+  <p class="mb-4 rounded-lg bg-green-50 px-3 py-2 text-sm text-green-700">{{ notice }}</p>
+}
+
+<form [formGroup]="form" (ngSubmit)="submit()" class="flex flex-col gap-3">
+  <div>
+    <label class="mb-1 block text-sm font-medium text-gray-700" for="username">Usuário</label>
+    <input
+      id="username"
+      type="text"
+      formControlName="username"
+      autocomplete="username"
+      class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-gray-900 focus:outline-none"
+    />
+    <app-field-error [control]="form.controls.username" />
+  </div>
+
+  <div>
+    <label class="mb-1 block text-sm font-medium text-gray-700" for="password">Senha</label>
+    <input
+      id="password"
+      type="password"
+      formControlName="password"
+      autocomplete="current-password"
+      class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-gray-900 focus:outline-none"
+    />
+    <app-field-error [control]="form.controls.password" />
+  </div>
+
+  @if (error()) {
+    <p class="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600">{{ error() }}</p>
+  }
+
+  <button
+    type="submit"
+    [disabled]="loading()"
+    class="mt-1 inline-flex items-center justify-center gap-2 rounded-full bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-700 disabled:opacity-50"
+  >
+    @if (loading()) {
+      <span
+        class="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white"
+        aria-hidden="true"
+      ></span>
+    }
+    {{ loading() ? 'Entrando…' : 'Entrar' }}
+  </button>
+</form>
+
+<p class="mt-4 text-center text-sm text-gray-600">
+  Esqueceu a senha?
+  <a routerLink="/auth/forgot-password" class="font-medium text-gray-900 hover:underline">
+    Recuperar
+  </a>
+</p>
+<p class="mt-1 text-center text-sm text-gray-600">
+  Não tem conta?
+  <a routerLink="/auth/register" class="font-medium text-gray-900 hover:underline">
+    Criar conta
+  </a>
+</p>

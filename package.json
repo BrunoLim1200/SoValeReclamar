@@ -31,6 +31,7 @@
     "@angular/ssr": "^20.1.5",
     "@ngrx/signals": "^20.0.0",
     "@tailwindcss/postcss": "^4.3.2",
+    "amazon-cognito-identity-js": "^6.3.20",
     "express": "^5.1.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"

@@ -1,0 +1,46 @@
+<section class="mx-auto max-w-2xl px-4 py-6">
+  <header class="mb-4">
+    <a routerLink="/" class="text-xs text-gray-500 hover:underline">&larr; Feed</a>
+    <h1 class="mt-1 text-xl font-semibold text-gray-900">
+      {{ name() || 'Entidade' }}
+    </h1>
+    @if (typeLabel(); as label) {
+      <span
+        class="mt-1 inline-block rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-700"
+      >
+        {{ label }}
+      </span>
+    }
+  </header>
+
+  <ul class="flex flex-col gap-4">
+    @for (item of complaints(); track item.id) {
+      <li>
+        <app-complaint-card [item]="item" />
+      </li>
+    }
+  </ul>
+
+  @if (loading()) {
+    <p class="py-6 text-center text-sm text-gray-500">Carregando…</p>
+  }
+
+  @if (error()) {
+    <div class="py-6 text-center">
+      <p class="text-sm text-red-600">{{ error() }}</p>
+      <button
+        type="button"
+        (click)="retry()"
+        class="mt-2 rounded-full bg-gray-900 px-4 py-1.5 text-sm font-medium text-white hover:bg-gray-700"
+      >
+        Tentar novamente
+      </button>
+    </div>
+  }
+
+  @if (!loading() && !error() && complaints().length === 0) {
+    <p class="py-6 text-center text-sm text-gray-500">
+      Nenhuma reclamação por aqui ainda.
+    </p>
+  }
+</section>

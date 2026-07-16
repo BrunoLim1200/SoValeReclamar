@@ -25,9 +25,9 @@ info:
     public `s3:GetObject`), so the app can render it directly.
 
 servers:
-  - url: https://REPLACE-ME.execute-api.us-east-1.amazonaws.com
+  - url: https://ikrkwbapeh.execute-api.us-east-1.amazonaws.com
     description: dev (get the real URL from `npx serverless info --stage dev`)
-  - url: https://REPLACE-ME.execute-api.us-east-1.amazonaws.com
+  - url: https://adszv29vmg.execute-api.us-east-1.amazonaws.com
     description: prod (get the real URL from `npx serverless info --stage prod`)
 
 tags:
