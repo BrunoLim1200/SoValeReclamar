@@ -5,6 +5,7 @@ import {
   effect,
   inject,
   input,
+  untracked,
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { RouterLink } from '@angular/router';
@@ -55,11 +56,13 @@ export class Entity {
     // across /entities/:id navigations. Registered in the constructor so it's
     // in a valid injection context (nesting effect() inside afterNextRender is
     // not, and throws NG0203). The browser guard keeps the HTTP call off the
-    // SSR path, where it would otherwise block the render.
+    // SSR path, where it would otherwise block the render. load() is called
+    // untracked: it reads store.loading() internally, and tracking that here
+    // would re-fire the effect on every load completion — an infinite loop.
     effect(() => {
       const id = this.id();
       if (this.isBrowser) {
-        this.store.load(id);
+        untracked(() => this.store.load(id));
       }
     });
   }

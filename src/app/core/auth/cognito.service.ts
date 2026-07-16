@@ -10,10 +10,6 @@ import {
 import { environment } from '../../../environments/environment';
 import { AuthUser } from './models';
 
-/** Mirrors CognitoUserPool's own validation so an unconfigured (`REPLACE-ME`) pool
- * id doesn't throw out of the constructor — that runs eagerly as a field
- * initializer, and would otherwise crash SSR/hydration on every page (this
- * service is reachable from MainLayout, which every route renders). */
 const USER_POOL_ID_PATTERN = /^[\w-]+_[0-9a-zA-Z]+$/;
 
 /**

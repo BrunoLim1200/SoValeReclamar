@@ -6,6 +6,13 @@
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <script>
+    // amazon-cognito-identity-js (via its bundled `buffer` dep) reads Node's
+    // `global` at module-evaluation time; without this shim the whole client
+    // bundle crashes with "global is not defined" and the app never boots.
+    // Must be a classic inline script so it runs before any module evaluates.
+    window.global ??= window;
+  </script>
 </head>
 <body>
   <app-root></app-root>
