@@ -21,7 +21,7 @@ export class ForgotPassword {
   protected readonly step = signal<'request' | 'reset'>('request');
 
   protected readonly requestForm = this.fb.nonNullable.group({
-    username: ['', Validators.required],
+    email: ['', [Validators.required, Validators.email]],
   });
 
   protected readonly resetForm = this.fb.nonNullable.group({
@@ -38,8 +38,8 @@ export class ForgotPassword {
       this.requestForm.markAllAsTouched();
       return;
     }
-    const { username } = this.requestForm.getRawValue();
-    const ok = await this.store.requestPasswordReset(username);
+    const { email } = this.requestForm.getRawValue();
+    const ok = await this.store.requestPasswordReset(email);
     if (ok) {
       this.step.set('reset');
     }
@@ -50,9 +50,9 @@ export class ForgotPassword {
       this.resetForm.markAllAsTouched();
       return;
     }
-    const { username } = this.requestForm.getRawValue();
+    const { email } = this.requestForm.getRawValue();
     const { code, newPassword } = this.resetForm.getRawValue();
-    const ok = await this.store.confirmPasswordReset(username, code, newPassword);
+    const ok = await this.store.confirmPasswordReset(email, code, newPassword);
     if (ok) {
       this.router.navigate(['/auth/login'], { queryParams: { notice: 'reset' } });
     }

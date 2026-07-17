@@ -6,9 +6,9 @@ export function mapCognitoError(err: unknown): string {
       return 'Login ainda não está disponível nesta instância (Cognito não configurado).';
     case 'UserNotFoundException':
     case 'NotAuthorizedException':
-      return 'Usuário ou senha incorretos.';
+      return 'E-mail ou senha incorretos.';
     case 'UsernameExistsException':
-      return 'Esse nome de usuário já está em uso.';
+      return 'Este e-mail já está cadastrado.';
     case 'InvalidPasswordException':
       return 'A senha não atende aos requisitos mínimos.';
     case 'InvalidParameterException':

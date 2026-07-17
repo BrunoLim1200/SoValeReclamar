@@ -29,32 +29,38 @@ export class CognitoService {
       })
     : null;
 
+  /** The pool uses email as the sign-in identifier (`UsernameAttributes: email`);
+   * the chosen display name travels as `preferred_username`, which the backend's
+   * PostConfirmation trigger persists as the domain `username`. */
   register(username: string, email: string, password: string): Promise<void> {
     const pool = this.requirePool();
-    const attributes = [new CognitoUserAttribute({ Name: 'email', Value: email })];
+    const attributes = [
+      new CognitoUserAttribute({ Name: 'email', Value: email }),
+      new CognitoUserAttribute({ Name: 'preferred_username', Value: username }),
+    ];
     return new Promise((resolve, reject) => {
-      pool.signUp(username, password, attributes, [], (err) => {
+      pool.signUp(email, password, attributes, [], (err) => {
         if (err) reject(err);
         else resolve();
       });
     });
   }
 
-  confirmRegistration(username: string, code: string): Promise<void> {
+  confirmRegistration(email: string, code: string): Promise<void> {
     return new Promise((resolve, reject) => {
-      this.newUser(username).confirmRegistration(code, true, (err) => {
+      this.newUser(email).confirmRegistration(code, true, (err) => {
         if (err) reject(err);
         else resolve();
       });
     });
   }
 
-  login(username: string, password: string): Promise<AuthUser> {
-    const user = this.newUser(username);
-    const details = new AuthenticationDetails({ Username: username, Password: password });
+  login(email: string, password: string): Promise<AuthUser> {
+    const user = this.newUser(email);
+    const details = new AuthenticationDetails({ Username: email, Password: password });
     return new Promise((resolve, reject) => {
       user.authenticateUser(details, {
-        onSuccess: (session) => resolve(this.toAuthUser(username, session)),
+        onSuccess: (session) => resolve(this.toAuthUser(session)),
         onFailure: (err) => reject(err),
       });
     });
@@ -72,7 +78,7 @@ export class CognitoService {
     }
     return new Promise((resolve) => {
       user.getSession((err: Error | null, session: CognitoUserSession | null) => {
-        resolve(err || !session?.isValid() ? null : this.toAuthUser(user.getUsername(), session));
+        resolve(err || !session?.isValid() ? null : this.toAuthUser(session));
       });
     });
   }
@@ -90,18 +96,18 @@ export class CognitoService {
     });
   }
 
-  requestPasswordReset(username: string): Promise<void> {
+  requestPasswordReset(email: string): Promise<void> {
     return new Promise((resolve, reject) => {
-      this.newUser(username).forgotPassword({
+      this.newUser(email).forgotPassword({
         onSuccess: () => resolve(),
         onFailure: (err) => reject(err),
       });
     });
   }
 
-  confirmPasswordReset(username: string, code: string, newPassword: string): Promise<void> {
+  confirmPasswordReset(email: string, code: string, newPassword: string): Promise<void> {
     return new Promise((resolve, reject) => {
-      this.newUser(username).confirmPassword(code, newPassword, {
+      this.newUser(email).confirmPassword(code, newPassword, {
         onSuccess: () => resolve(),
         onFailure: (err) => reject(err),
       });
@@ -119,7 +125,14 @@ export class CognitoService {
     return new CognitoUser({ Username: username, Pool: this.requirePool() });
   }
 
-  private toAuthUser(username: string, session: CognitoUserSession): AuthUser {
-    return { username, idToken: session.getIdToken().getJwtToken() };
+  /** Display name comes from the id token: `preferred_username` set at sign-up,
+   * falling back to the email for accounts created without one. */
+  private toAuthUser(session: CognitoUserSession): AuthUser {
+    const idToken = session.getIdToken();
+    const payload = idToken.payload as { preferred_username?: string; email?: string };
+    return {
+      username: payload.preferred_username ?? payload.email ?? '',
+      idToken: idToken.getJwtToken(),
+    };
   }
 }

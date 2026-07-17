@@ -8,7 +8,7 @@
         id="username"
         type="text"
         formControlName="username"
-        autocomplete="username"
+        autocomplete="nickname"
         class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-gray-900 focus:outline-none"
       />
       <app-field-error [control]="form.controls.username" />
@@ -20,7 +20,7 @@
         id="email"
         type="email"
         formControlName="email"
-        autocomplete="email"
+        autocomplete="username email"
         class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-gray-900 focus:outline-none"
       />
       <app-field-error [control]="form.controls.email" />

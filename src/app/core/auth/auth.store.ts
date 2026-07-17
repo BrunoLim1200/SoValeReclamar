@@ -56,10 +56,10 @@ export const AuthStore = signalStore(
       }
     },
 
-    async confirmRegistration(username: string, code: string): Promise<boolean> {
+    async confirmRegistration(email: string, code: string): Promise<boolean> {
       patchState(store, { loading: true, error: null });
       try {
-        await cognito.confirmRegistration(username, code);
+        await cognito.confirmRegistration(email, code);
         patchState(store, { loading: false });
         return true;
       } catch (err) {
@@ -68,10 +68,10 @@ export const AuthStore = signalStore(
       }
     },
 
-    async login(username: string, password: string): Promise<boolean> {
+    async login(email: string, password: string): Promise<boolean> {
       patchState(store, { loading: true, error: null });
       try {
-        const user = await cognito.login(username, password);
+        const user = await cognito.login(email, password);
         patchState(store, { user, loading: false });
         return true;
       } catch (err) {
@@ -85,10 +85,10 @@ export const AuthStore = signalStore(
       patchState(store, { user: null });
     },
 
-    async requestPasswordReset(username: string): Promise<boolean> {
+    async requestPasswordReset(email: string): Promise<boolean> {
       patchState(store, { loading: true, error: null });
       try {
-        await cognito.requestPasswordReset(username);
+        await cognito.requestPasswordReset(email);
         patchState(store, { loading: false });
         return true;
       } catch (err) {
@@ -98,13 +98,13 @@ export const AuthStore = signalStore(
     },
 
     async confirmPasswordReset(
-      username: string,
+      email: string,
       code: string,
       newPassword: string,
     ): Promise<boolean> {
       patchState(store, { loading: true, error: null });
       try {
-        await cognito.confirmPasswordReset(username, code, newPassword);
+        await cognito.confirmPasswordReset(email, code, newPassword);
         patchState(store, { loading: false });
         return true;
       } catch (err) {

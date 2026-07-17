@@ -52,9 +52,9 @@ export class Register {
       this.confirmForm.markAllAsTouched();
       return;
     }
-    const { username } = this.form.getRawValue();
+    const { email } = this.form.getRawValue();
     const { code } = this.confirmForm.getRawValue();
-    const ok = await this.store.confirmRegistration(username, code);
+    const ok = await this.store.confirmRegistration(email, code);
     if (ok) {
       this.router.navigate(['/auth/login'], { queryParams: { notice: 'confirmed' } });
     }

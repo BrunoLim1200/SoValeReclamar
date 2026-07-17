@@ -28,7 +28,7 @@ export class Login {
   protected readonly notice: string | null;
 
   protected readonly form = this.fb.nonNullable.group({
-    username: ['', Validators.required],
+    email: ['', [Validators.required, Validators.email]],
     password: ['', Validators.required],
   });
 
@@ -43,8 +43,8 @@ export class Login {
       this.form.markAllAsTouched();
       return;
     }
-    const { username, password } = this.form.getRawValue();
-    const ok = await this.store.login(username, password);
+    const { email, password } = this.form.getRawValue();
+    const ok = await this.store.login(email, password);
     if (ok) {
       const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') ?? '/';
       this.router.navigateByUrl(returnUrl);

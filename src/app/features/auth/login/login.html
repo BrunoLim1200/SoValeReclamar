@@ -6,15 +6,15 @@
 
 <form [formGroup]="form" (ngSubmit)="submit()" class="flex flex-col gap-3">
   <div>
-    <label class="mb-1 block text-sm font-medium text-gray-700" for="username">Usuário</label>
+    <label class="mb-1 block text-sm font-medium text-gray-700" for="email">E-mail</label>
     <input
-      id="username"
-      type="text"
-      formControlName="username"
-      autocomplete="username"
+      id="email"
+      type="email"
+      formControlName="email"
+      autocomplete="username email"
       class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-gray-900 focus:outline-none"
     />
-    <app-field-error [control]="form.controls.username" />
+    <app-field-error [control]="form.controls.email" />
   </div>
 
   <div>
